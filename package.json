@@ -1,0 +1,15 @@
+{
+  "name": "week-2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "^4.3.0",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "build": "tsc ./src/index.ts && node ./src/index.js",
+    "watch": "yarn tsc --watch ./src/index.ts",
+    "run": "node ./src/index.js"
+  }
+}
