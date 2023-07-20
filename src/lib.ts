@@ -183,10 +183,10 @@ export const bindList = <T1, T2>(l: List<T1>, f: Fun<T1, List<T2>>): List<T2> =>
 //////////////////////////////////////////
 //                 Pair                 //
 //////////////////////////////////////////
-export type Pair<T1, T2> = {
+export interface Pair<T1, T2> {
   fst: T1;
   snd: T2;
-};
+}
 
 export const Pair = <T1, T2>(x: T1, y: T2): Pair<T1, T2> => ({
   fst: x,
@@ -203,22 +203,30 @@ export const mapPair = <L1, R1, L2, R2>(
 //////////////////////////////////////////
 export interface EitherMethods<L, R> {
   then: <R2>(this: Either<L, R>, f: Fun<R, Either<L, R2>>) => Either<L, R2>;
-  print: (this: Either<L, R>) => string;
 }
 
-const eitherMethods = <L, R>(): EitherMethods<L, R> => ({
-  then: function <R2>(
-    this: Either<L, R>,
-    f: Fun<R, Either<L, R2>>
-  ): Either<L, R2> {
-    return mapEither(Id<L>(), f).then(joinEither())(this);
-  },
-  print: function (this: Either<L, R>): string {
-    return `${this.value}`;
-  },
-});
+// const eitherMethods = <L, R>(): EitherMethods<L, R> => ({
+//   then: function <R2>(
+//     this: Either<L, R>,
+//     f: Fun<R, Either<L, R2>>
+//   ): Either<L, R2> {
+//     return mapEither(Id<L>(), f).then(joinEither())(this);
+//   },
+// });
 
-export type Either<L, R> = (
+// export type Either<L, R> = (
+//   | {
+//       kind: "Left";
+//       value: L;
+//     }
+//   | {
+//       kind: "Right";
+//       value: R;
+//     }
+// ) &
+//   EitherMethods<L, R>;
+
+export type Either<L, R> =
   | {
       kind: "Left";
       value: L;
@@ -226,14 +234,14 @@ export type Either<L, R> = (
   | {
       kind: "Right";
       value: R;
-    }
-) &
-  EitherMethods<L, R>;
+    };
 
 export const inl = <L, R>(): Fun<L, Either<L, R>> =>
-  Fun((v) => ({ ...eitherMethods(), kind: "Left", value: v }));
+  // Fun((v) => ({ ...eitherMethods(), kind: "Left", value: v }));
+  Fun((v) => ({ kind: "Left", value: v }));
 export const inr = <L, R>(): Fun<R, Either<L, R>> =>
-  Fun((v) => ({ ...eitherMethods(), kind: "Right", value: v }));
+  // Fun((v) => ({ ...eitherMethods(), kind: "Right", value: v }));
+  Fun((v) => ({ kind: "Right", value: v }));
 
 export const mapEither = <L1, R1, L2, R2>(
   f: Fun<L1, L2>,
